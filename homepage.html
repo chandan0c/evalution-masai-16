@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+        #nev{
+            display: flex;
+            justify-content: space-around;
+            background-color: rgb(140, 140, 190);
+            padding: 15px;
+        }
+        #nev a{
+            text-decoration: none;
+            color: white;
+        }
+        table{
+            width: 80%;
+            height: 200px;
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        td{
+            color: blue;
+            border: 1px solid green;
+            
+        }
+    </style>
+</head>
+<body>
+    <div id="nev">
+        <a href="./homepage.html" >Home Page</a>
+        <a href="./search.html">Search page</a>
+    </div>
+   <table id="table">
+      <tr>
+          <td>name</td>
+          <td>brewery_type</td>
+          <td> city</td>
+          <td> state</td>
+      </tr>
+
+   </table>
+   <select onclick="select()"  id="select">
+       <option>micor</option>
+       <option>nano</option>
+       <option>regional</option>
+       <option>large</option>
+   </select>
+</body>
+</html>
+<script>
+   
+
+   async function fun1(data=[]){
+       let parent=document.getElementById("table")
+       parent.innerHTML=""
+       console.log("rnjadbj",data)
+    
+       if(data.length<=0){    
+      var data=await  fetch("https://api.openbrewerydb.org/breweries")
+       data=await data.json()
+       console.log("temp",data);
+       }
+    
+       data.map(e=>{
+        let tr=document.createElement("tr")
+        let {name,brewery_type,city,state}=e
+        tabledata=[name,brewery_type,city,state]
+        for(let i=0;i<4;i++){
+            let td=document.createElement("td");
+            td.innerHTML=tabledata[i];
+            tr.appendChild(td);
+        }
+        let button=document.createElement("button");
+        button.innerHTML="moredetails"
+        let data1=e.id
+        button.setAttribute("value",data1)
+        button.setAttribute("onclick",`fun2(data)`)
+        tr.append(button)
+        parent.append(tr)
+       
+       })
+     
+
+    }
+
+    function fun2(a){
+        console.log("ranaj",a)
+       
+    }
+
+    fun1()
+    async function select(){
+        let value=document.getElementById("select").value;
+
+        let data=await fetch(`https://api.openbrewerydb.org/breweries?by_type=${value}&per_page=3`)
+        data=await data.json()
+    if(data){
+        fun1(data)
+    }
+    
+
+
+    }
+
+  
+</script>
+
+
+
